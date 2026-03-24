@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Яндекс — Профиль компании</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.dark-theme .header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .header-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .header-back:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .container {
+      margin-top: 56px;
+      margin-bottom: 70px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0;
+    }
+
+    .cover {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      position: relative;
+      animation: slideDown 0.6s ease;
+    }
+
+    .company-info {
+      padding: 24px 16px;
+      background: white;
+      animation: slideUp 0.6s ease 0.1s both;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.dark-theme .company-info {
+      background: rgba(30, 41, 59, 0.5);
+    }
+
+    .header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    .company-name {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Merriweather', serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .verified-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--color-accent);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .company-category {
+      font-size: 12px;
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    body.dark-theme .company-category {
+      color: #CBD5E1;
+    }
+
+    .company-description {
+      font-size: 13px;
+      color: #64748B;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    body.dark-theme .company-description {
+      color: #CBD5E1;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .link-btn {
+      padding: 8px 12px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 8px;
+      font-size: 11px;
+      color: var(--color-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .link-btn {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .link-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .section-divider {
+      height: 1px;
+      background: rgba(203, 213, 225, 0.3);
+      margin: 20px 0;
+    }
+
+    body.dark-theme .section-divider {
+      background: rgba(71, 85, 105, 0.3);
+    }
+
+    .gallery {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 16px 20px 16px;
+      scrollbar-width: none;
+      animation: slideUp 0.6s ease 0.2s both;
+      opacity: 0;
+    }
+
+    .gallery::-webkit-scrollbar {
+      display: none;
+    }
+
+    .gallery-item {
+      flex-shrink: 0;
+      width: 150px;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+    }
+
+    body.dark-theme .gallery-item {
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .content-section {
+      padding: 0 16px 20px 16px;
+      background: white;
+      animation: slideUp 0.6s ease 0.3s both;
+      opacity: 0;
+    }
+
+    body.dark-theme .content-section {
+      background: rgba(30, 41, 59, 0.5);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--color-text-light);
+      font-family: 'Merriweather', serif;
+    }
+
+    body.dark-theme .section-title {
+      color: var(--color-text-dark);
+    }
+
+    .vacancies-list {
+      animation: slideUp 0.6s ease 0.4s both;
+      opacity: 0;
+    }
+
+    .vacancy-card {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .vacancy-card {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .vacancy-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+    }
+
+    .vacancy-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .vacancy-title {
+      color: var(--color-text-dark);
+    }
+
+    .vacancy-meta {
+      font-size: 10px;
+      color: #94A3B8;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    body.dark-theme .vacancy-meta {
+      color: #CBD5E1;
+    }
+
+    .tech-stack {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 16px;
+      background: rgba(99, 102, 241, 0.05);
+      border-radius: 12px;
+      animation: slideUp 0.6s ease 0.5s both;
+      opacity: 0;
+    }
+
+    body.dark-theme .tech-stack {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .tech-tag {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--color-primary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+
+    body.dark-theme .bottom-nav {
+      background: rgba(15, 23, 42, 0.95);
+      border-top-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      color: #94A3B8;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .nav-item.active {
+      color: var(--color-primary);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--color-primary);
+      border-radius: 50%;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none;
+      }
+
+      .container {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <button class="header-back">← Назад</button>
+    <div style="flex: 1; text-align: center;">
+      <div style="font-size: 14px; font-weight: 600; font-family: Merriweather;">Профиль компании</div>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- COVER -->
+    <div class="cover">🏢</div>
+
+    <!-- COMPANY INFO -->
+    <div class="company-info">
+      <div class="header-info">
+        <div>
+          <div class="company-name">
+            Яндекс
+            <div class="verified-badge">✓ Верифицирована</div>
+          </div>
+          <div class="company-category">IT • Поиск и сервисы</div>
+        </div>
+      </div>
+
+      <p class="company-description">
+        Яндекс — один из крупнейших IT-компаний в России. Разрабатываем поиск, карты, такси, маркетплейс и другие сервисы, которыми пользуются миллионы людей ежедневно.
+      </p>
+
+      <div class="links-grid">
+        <a href="#" class="link-btn">
+          <span>🌐</span> Сайт
+        </a>
+        <a href="#" class="link-btn">
+          <span>💼</span> HH.ru
+        </a>
+        <a href="#" class="link-btn">
+          <span>🔗</span> LinkedIn
+        </a>
+        <a href="#" class="link-btn">
+          <span>💬</span> Telegram
+        </a>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div style="border-top: 1px solid rgba(203, 213, 225, 0.3);">
+      <div style="padding: 16px 16px 0 16px;">
+        <h3 class="section-title">Фото офиса</h3>
+      </div>
+      <div class="gallery">
+        <div class="gallery-item">📍</div>
+        <div class="gallery-item">🏗️</div>
+        <div class="gallery-item">👥</div>
+        <div class="gallery-item">💻</div>
+      </div>
+    </div>
+
+    <!-- ACTIVE VACANCIES -->
+    <div class="content-section">
+      <h3 class="section-title">Активные возможности (3)</h3>
+      
+      <div class="vacancies-list">
+        <div class="vacancy-card">
+          <div class="vacancy-title">Frontend Developer</div>
+          <div class="vacancy-meta">
+            <span>💰 120–180k</span>
+            <span>·</span>
+            <span>Гибрид</span>
+            <span>·</span>
+            <span>Москва</span>
+          </div>
+        </div>
+
+        <div class="vacancy-card">
+          <div class="vacancy-title">Backend Developer</div>
+          <div class="vacancy-meta">
+            <span>💰 150–220k</span>
+            <span>·</span>
+            <span>Офис</span>
+            <span>·</span>
+            <span>Москва</span>
+          </div>
+        </div>
+
+        <div class="vacancy-card">
+          <div class="vacancy-title">DevOps Engineer</div>
+          <div class="vacancy-meta">
+            <span>💰 180–260k</span>
+            <span>·</span>
+            <span>Remote</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT COMPANY -->
+    <div class="content-section">
+      <h3 class="section-title">О компании</h3>
+      <p class="company-description">
+        Команда Frontend разработчиков Яндекса состоит из более чем 200 специалистов, работающих над ключевыми продуктами компании. Мы используем современный стек технологий и постоянно развиваемся.
+      </p>
+
+      <h3 class="section-title" style="margin-top: 16px;">Технологический стек</h3>
+      <div class="tech-stack">
+        <div class="tech-tag">React</div>
+        <div class="tech-tag">TypeScript</div>
+        <div class="tech-tag">Node.js</div>
+        <div class="tech-tag">PostgreSQL</div>
+        <div class="tech-tag">Kubernetes</div>
+        <div class="tech-tag">Docker</div>
+        <div class="tech-tag">GraphQL</div>
+        <div class="tech-tag">Redis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item">
+      <div class="nav-icon">🏠</div>
+      <span>Главная</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⭐</div>
+      <span>Избранное</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">📬</div>
+      <span>Отклики</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👤</div>
+      <span>Профиль</span>
+    </div>
+  </nav>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Back button
+    document.querySelector('.header-back').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    // Nav items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

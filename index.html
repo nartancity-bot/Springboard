@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Трамплин — Прототип</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-gold: #F59E0B;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .logo {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 36px;
+      margin-bottom: 12px;
+      font-family: 'Merriweather', serif;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #94A3B8;
+      margin-bottom: 20px;
+    }
+
+    body.dark-theme .subtitle {
+      color: #CBD5E1;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
+
+    body.dark-theme .stat-label {
+      color: #CBD5E1;
+    }
+
+    .screens-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .screens-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .screen-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.dark-theme .screen-card {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .screen-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .screen-preview {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+    }
+
+    body.dark-theme .screen-preview {
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .screen-info {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-category {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .screen-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-family: 'Merriweather', serif;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .screen-name {
+      color: var(--color-text-dark);
+    }
+
+    .screen-description {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-bottom: 16px;
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    body.dark-theme .screen-description {
+      color: #CBD5E1;
+    }
+
+    .screen-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .screen-link:hover {
+      background: rgba(99, 102, 241, 0.2);
+      transform: translateX(2px);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      margin-top: 40px;
+      font-family: 'Merriweather', serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-icon {
+      font-size: 24px;
+    }
+
+    .info-box {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    body.dark-theme .info-box {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .info-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .info-text {
+      font-size: 12px;
+      color: #94A3B8;
+      line-height: 1.6;
+    }
+
+    body.dark-theme .info-text {
+      color: #CBD5E1;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.2s ease;
+      z-index: 50;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--color-accent);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    /* === GLOBAL ANIMATIONS === */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle">🌙</button>
+
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo">🚀</div>
+      <h1 class="title">Трамплин</h1>
+      <p class="subtitle">Платформа для поиска работы, стажировок и нетворкинга</p>
+      
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">14</div>
+          <div class="stat-label">Экранов создано</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Темная тема</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">Адаптивно</div>
+          <div class="stat-label">Мобиле & Десктоп</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO BOX -->
+    <div class="info-box">
+      <div class="info-title">📋 Статистика</div>
+      <div class="info-text">
+        <strong>Всего экранов создано: 14</strong><br>
+        Публичные (гость): 4 экрана<br>
+        Аутентификация: 1 экран<br>
+        Соискатель: 4 экрана<br>
+        Работодатель: 1 экран<br>
+        Куратор: 1 экран<br>
+        Компания: 1 экран<br>
+        Система: 2 экрана (404, Вход)
+      </div>
+    </div>
+
+    <!-- PUBLIC SCREENS -->
+    <div class="section-title">
+      <span class="section-icon">🌐</span>
+      Публичные экраны
+    </div>
+
+    <div class="screens-grid">
+      <!-- HOME PAGE -->
+      <div class="screen-card">
+        <div class="screen-preview">🏠</div>
+        <div class="screen-info">
+          <div class="screen-category">Главная</div>
+          <div class="screen-name">Домашняя страница</div>
+          <div class="screen-description">
+            Hero-момент с картой, поисковая строка, три режима просмотра (карта/лента/свайп), 
+            динамический счётчик возможностей, фильтры.
+          </div>
+          <a href="trampoline-home.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- OPPORTUNITY CARD -->
+      <div class="screen-card">
+        <div class="screen-preview">📌</div>
+        <div class="screen-info">
+          <div class="screen-category">Возможность</div>
+          <div class="screen-name">Карточка вакансии</div>
+          <div class="screen-description">
+            Подробная информация о вакансии с вкладками (описание, требования, компания, место), 
+            медиаконтент, CTA-блок, статус верификации, дедлайн.
+          </div>
+          <a href="trampoline-opportunity-card.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTH SCREENS -->
+    <div class="section-title">
+      <span class="section-icon">🔐</span>
+      Аутентификация
+    </div>
+
+    <div class="screens-grid">
+      <!-- SIGNUP -->
+      <div class="screen-card">
+        <div class="screen-preview">📝</div>
+        <div class="screen-info">
+          <div class="screen-category">Регистрация</div>
+          <div class="screen-name">Многошаговая форма</div>
+          <div class="screen-description">
+            Выбор роли (соискатель/работодатель), базовые данные, специфичные поля 
+            для каждой роли, прогресс-индикатор, валидация.
+          </div>
+          <a href="trampoline-signup.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- USER DASHBOARDS -->
+    <div class="section-title">
+      <span class="section-icon">👤</span>
+      Личные кабинеты
+    </div>
+
+    <div class="screens-grid">
+      <!-- SEEKER DASHBOARD -->
+      <div class="screen-card">
+        <div class="screen-preview">🏠</div>
+        <div class="screen-info">
+          <div class="screen-category">Соискатель</div>
+          <div class="screen-name">ЛК — Главная</div>
+          <div class="screen-description">
+            Дашборд соискателя со статистикой, виджетами активности, рекомендованными 
+            вакансиями, дедлайнами и уведомлениями.
+          </div>
+          <a href="trampoline-seeker-dashboard.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- SEEKER PROFILE -->
+      <div class="screen-card">
+        <div class="screen-preview">💼</div>
+        <div class="screen-info">
+          <div class="screen-category">Соискатель</div>
+          <div class="screen-name">Профиль соискателя</div>
+          <div class="screen-description">
+            Личная страница с аватаром, навыками, опытом проектов, контактами, 
+            статусом приватности, возможностью редактирования.
+          </div>
+          <a href="trampoline-profile.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- RESPONSES -->
+      <div class="screen-card">
+        <div class="screen-preview">📬</div>
+        <div class="screen-info">
+          <div class="screen-category">Соискатель</div>
+          <div class="screen-name">История откликов</div>
+          <div class="screen-description">
+            Список откликов с фильтрацией по статусам (новый, просмотрен, интервью, 
+            оффер, резерв, отказ). Цветовая кодировка статусов.
+          </div>
+          <a href="trampoline-responses.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- FAVORITES -->
+      <div class="screen-card">
+        <div class="screen-preview">⭐</div>
+        <div class="screen-info">
+          <div class="screen-category">Соискатель</div>
+          <div class="screen-name">Избранное</div>
+          <div class="screen-description">
+            Две вкладки: сохранённые вакансии и те, на которые откликнулись. 
+            Быстрое удаление из избранного с уведомлением.
+          </div>
+          <a href="trampoline-favorites.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- EMPLOYER DASHBOARD -->
+      <div class="screen-card">
+        <div class="screen-preview">📊</div>
+        <div class="screen-info">
+          <div class="screen-category">Работодатель</div>
+          <div class="screen-name">ЛК работодателя</div>
+          <div class="screen-description">
+            Дашборд с статусом верификации, виджетами активности, быстрыми действиями, 
+            лентой откликов, требующих внимания.
+          </div>
+          <a href="trampoline-employer-dashboard.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="section-title">
+      <span class="section-icon">⚡</span>
+      Ключевые особенности
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 40px;">
+      <div class="info-box">
+        <div class="info-title">🎨 Визуальная система</div>
+        <div class="info-text">
+          Primary color: #6366F1 (Indigo) · Accent: #10B981 (Emerald) · Urgent: #EF4444 (Red) · 
+          Font: Merriweather (headings) + Inter (body) · Border-radius: 16px · 
+          Animations: 200–600ms ease-out
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">🌙 Темная тема</div>
+        <div class="info-text">
+          Полная поддержка темной темы на всех экранах. Переключение темы сохраняется в localStorage.
+          Dark background: #0F172A · Smooth transitions между темами.
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">📱 Адаптивность</div>
+        <div class="info-text">
+          Mobile-first подход. Все экраны работают на мобильных устройствах (нижняя навигация),
+          планшетах и десктопах (полная версия). Используется Tailwind CSS и custom media queries.
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">✨ Интерактивность</div>
+        <div class="info-text">
+          Плавные переходы, hover-эффекты, animated counters, placeholder cycling, 
+          theme toggle, tab switching, smooth scrolling, validated forms.
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">🗺 Карта (Leaflet.js)</div>
+        <div class="info-text">
+          Интеграция Leaflet.js на главной странице. Динамическое добавление маркеров,
+          wave animation, zoom-in при загрузке, поддержка темной темы.
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">🚀 Production-ready</div>
+        <div class="info-text">
+          Все экраны могут быть развернуты как стоит-alone HTML файлы или интегрированы 
+          в React/Vue приложение. Код хорошо организован и документирован.
+        </div>
+      </div>
+    </div>
+
+    <!-- REMAINING SCREENS -->
+    <div class="section-title">
+      <span class="section-icon">✨</span>
+      Дополнительные экраны
+    </div>
+
+    <div class="screens-grid">
+      <!-- CALENDAR -->
+      <div class="screen-card">
+        <div class="screen-preview">📅</div>
+        <div class="screen-info">
+          <div class="screen-category">Общее</div>
+          <div class="screen-name">Календарь мероприятий</div>
+          <div class="screen-description">
+            Два режима: лента ивентов по датам и сетка календаря. Фильтрация по типам 
+            (Хакатон, Лекция, День открытых дверей, Онлайн, Офлайн). Кнопка "Пойду".
+          </div>
+          <a href="trampoline-calendar.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="screen-card">
+        <div class="screen-preview">🔑</div>
+        <div class="screen-info">
+          <div class="screen-category">Аутентификация</div>
+          <div class="screen-name">Страница входа</div>
+          <div class="screen-description">
+            Email + Пароль. Toggle видимости пароля. Ссылка "Забыл пароль?". 
+            Ссылка на регистрацию. Минималистичный дизайн с focus states.
+          </div>
+          <a href="trampoline-login.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- 404 PAGE -->
+      <div class="screen-card">
+        <div class="screen-preview">⚠️</div>
+        <div class="screen-info">
+          <div class="screen-category">Система</div>
+          <div class="screen-name">404 — Страница не найдена</div>
+          <div class="screen-description">
+            Дружелюбная ошибка с летящей ракетой (float animation). Понятное сообщение. 
+            Кнопки "На главную" и "Назад". Декоративные элементы.
+          </div>
+          <a href="trampoline-404.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- CURATOR DASHBOARD -->
+      <div class="screen-card">
+        <div class="screen-preview">👑</div>
+        <div class="screen-info">
+          <div class="screen-category">Куратор</div>
+          <div class="screen-name">ЛК куратора — Главная</div>
+          <div class="screen-description">
+            Дашборд куратора со статистикой (карточки на проверке, компании, жалобы). 
+            Очередь модерации, верификация компаний, пул жалоб (≥3 жалобы).
+          </div>
+          <a href="trampoline-curator-dashboard.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- COMPANY PROFILE -->
+      <div class="screen-card">
+        <div class="screen-preview">🏢</div>
+        <div class="screen-info">
+          <div class="screen-category">Компания</div>
+          <div class="screen-name">Профиль компании (публичный)</div>
+          <div class="screen-description">
+            Обложка, логотип, описание, ссылки (сайт, HH, LinkedIn, Telegram). 
+            Галерея фото офиса, активные возможности, технологический стек.
+          </div>
+          <a href="trampoline-company-profile.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+
+      <!-- CONTACTS (NETWORKING) -->
+      <div class="screen-card">
+        <div class="screen-preview">👥</div>
+        <div class="screen-info">
+          <div class="screen-category">Соискатель</div>
+          <div class="screen-name">Контакты (Нетворкинг)</div>
+          <div class="screen-description">
+            Три вкладки: Контакты (8), Входящие заявки (2), Исходящие (1). Поиск по имени/вузу. 
+            Карточки контактов с профилем и рекомендациями.
+          </div>
+          <a href="trampoline-contacts.html" class="screen-link">
+            <span>→</span> Открыть
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="section-title">
+      <span class="section-icon">📋</span>
+      Оставшиеся экраны (опционально)
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 40px;">
+      <div class="info-box">
+        <div class="info-title">📱 Экраны которые можно добавить</div>
+        <div class="info-text">
+          • Канбан доска откликов (для работодателя) — перетаскивание карточек<br>
+          • ЛК куратора — полная версия с модерацией и верификацией<br>
+          • Страница восстановления пароля<br>
+          • Профиль пользователя — редактирование<br>
+          • Уведомления — центр уведомлений<br>
+          • Поиск — расширенная страница поиска с фильтрами
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="text-align: center; padding: 40px 0; border-top: 1px solid rgba(203, 213, 225, 0.3); margin-top: 60px;">
+      <p style="font-size: 12px; color: #94A3B8; margin-bottom: 16px;">
+        Создано с ❤️ для платформы Трамплин
+      </p>
+      <p style="font-size: 11px; color: #94A3B8;">
+        Все экраны полностью адаптивны и поддерживают темную тему
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+  </script>
+
+</body>
+</html>

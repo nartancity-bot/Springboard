@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход — Трамплин</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    body.dark-theme .card {
+      background: rgba(30, 41, 59, 0.6);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #94A3B8;
+    }
+
+    body.dark-theme .subtitle {
+      color: #CBD5E1;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      animation: slideUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme label {
+      color: var(--color-text-dark);
+    }
+
+    .password-field {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(203, 213, 225, 0.5);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: var(--color-text-light);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    body.dark-theme input {
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--color-text-dark);
+      border-color: rgba(71, 85, 105, 0.5);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    input::placeholder {
+      color: #94A3B8;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #94A3B8;
+      transition: all 0.2s ease;
+      padding: 4px;
+    }
+
+    .password-toggle:hover {
+      color: var(--color-primary);
+    }
+
+    .forgot-password {
+      font-size: 12px;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      margin-top: -12px;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .footer-text {
+      text-align: center;
+      font-size: 12px;
+      color: #94A3B8;
+      margin-top: 20px;
+    }
+
+    body.dark-theme .footer-text {
+      color: #CBD5E1;
+    }
+
+    .footer-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.2s ease;
+      z-index: 50;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      z-index: 50;
+    }
+
+    .back-button:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px 16px;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+
+      .logo {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="back-button">←</button>
+  <button class="theme-toggle" id="themeToggle">🌙</button>
+
+  <div class="container">
+    <div class="card">
+      <!-- HEADER -->
+      <div class="header">
+        <div class="logo">🚀</div>
+        <h1 class="title">Трамплин</h1>
+        <p class="subtitle">Вход в аккаунт</p>
+      </div>
+
+      <!-- FORM -->
+      <form>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            placeholder="you@example.com" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <div class="password-field">
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="Минимум 8 символов" 
+              required
+            >
+            <button 
+              type="button" 
+              class="password-toggle" 
+              onclick="togglePassword('password')"
+            >👁</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <a href="#" class="forgot-password">Забыл пароль?</a>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Войти</button>
+        </div>
+      </form>
+
+      <!-- FOOTER -->
+      <div class="footer-text">
+        Нет аккаунта? 
+        <a href="#" class="footer-link">Зарегистрируйся</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Password toggle
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.type = field.type === 'password' ? 'text' : 'password';
+    }
+
+    // Back button
+    document.querySelector('.back-button').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    // Form submission
+    document.querySelector('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (email && password) {
+        alert('Успешный вход! (это демо)');
+      }
+    });
+
+    // Links
+    document.querySelectorAll('.footer-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Переход на страницу регистрации (это демо)');
+      });
+    });
+
+    document.querySelector('.forgot-password').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Переход на восстановление пароля (это демо)');
+    });
+  </script>
+
+</body>
+</html>

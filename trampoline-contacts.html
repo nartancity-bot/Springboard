@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакты — Нетворкинг</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.dark-theme .header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .header-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .header-back:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Merriweather', serif;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .container {
+      margin-top: 56px;
+      margin-bottom: 70px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 20px 16px;
+    }
+
+    .search-section {
+      margin-bottom: 24px;
+      animation: slideDown 0.6s ease 0.1s both;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid rgba(203, 213, 225, 0.5);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: var(--color-text-light);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    body.dark-theme .search-input {
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--color-text-dark);
+      border-color: rgba(71, 85, 105, 0.5);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+      margin-bottom: 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      animation: slideUp 0.6s ease 0.2s both;
+      opacity: 0;
+    }
+
+    body.dark-theme .tabs {
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      padding: 14px 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #94A3B8;
+      position: relative;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--color-primary);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--color-primary);
+    }
+
+    .tab-count {
+      margin-left: 6px;
+      font-weight: 600;
+    }
+
+    .contacts-list {
+      animation: slideUp 0.6s ease 0.3s both;
+      opacity: 0;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .contact-card {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .contact-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+    }
+
+    .contact-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .contact-content {
+      flex: 1;
+    }
+
+    .contact-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .contact-name {
+      color: var(--color-text-dark);
+    }
+
+    .contact-meta {
+      font-size: 11px;
+      color: #94A3B8;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    body.dark-theme .contact-meta {
+      color: #CBD5E1;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      color: var(--color-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+
+    .btn-small:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-accept {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-accent);
+    }
+
+    .btn-accept:hover {
+      background: rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-decline {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-urgent);
+    }
+
+    .btn-decline:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94A3B8;
+    }
+
+    body.dark-theme .empty-state {
+      color: #CBD5E1;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .empty-title {
+      color: var(--color-text-dark);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+
+    body.dark-theme .bottom-nav {
+      background: rgba(15, 23, 42, 0.95);
+      border-top-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      color: #94A3B8;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .nav-item.active {
+      color: var(--color-primary);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--color-primary);
+      border-radius: 50%;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none;
+      }
+
+      .container {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <button class="header-back">← Назад</button>
+    <div class="header-title">Контакты</div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- SEARCH -->
+    <div class="search-section">
+      <input 
+        type="text" 
+        class="search-input" 
+        id="searchInput"
+        placeholder="Поиск по имени или вузу..."
+      >
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="contacts">
+        Контакты
+        <span class="tab-count">(8)</span>
+      </button>
+      <button class="tab" data-tab="incoming">
+        Входящие
+        <span class="tab-count">(2)</span>
+      </button>
+      <button class="tab" data-tab="outgoing">
+        Исходящие
+        <span class="tab-count">(1)</span>
+      </button>
+    </div>
+
+    <!-- CONTACTS TAB -->
+    <div class="contacts-list" id="contacts-tab">
+      <div class="contact-card">
+        <div class="contact-avatar">👩‍💻</div>
+        <div class="contact-content">
+          <div class="contact-name">Мария Иванова</div>
+          <div class="contact-meta">
+            <span>МГУ, 4 курс</span>
+            <span>·</span>
+            <span>React, Python</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-small">Профиль</button>
+          <button class="btn-small">Рекомендовать</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">👨‍💻</div>
+        <div class="contact-content">
+          <div class="contact-name">Петр Сидоров</div>
+          <div class="contact-meta">
+            <span>ВШЭ, 3 курс</span>
+            <span>·</span>
+            <span>JavaScript, Go</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-small">Профиль</button>
+          <button class="btn-small">Рекомендовать</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">👩‍🎓</div>
+        <div class="contact-content">
+          <div class="contact-name">Анна Петрова</div>
+          <div class="contact-meta">
+            <span>СПбГУ, 2 курс</span>
+            <span>·</span>
+            <span>ML, Python</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-small">Профиль</button>
+          <button class="btn-small">Рекомендовать</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">👨‍🎓</div>
+        <div class="contact-content">
+          <div class="contact-name">Иван Смирнов</div>
+          <div class="contact-meta">
+            <span>МИЭТ, 1 курс</span>
+            <span>·</span>
+            <span>C++, Qt</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-small">Профиль</button>
+          <button class="btn-small">Рекомендовать</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOMING TAB -->
+    <div class="contacts-list hidden" id="incoming-tab" style="display: none;">
+      <div class="contact-card">
+        <div class="contact-avatar">👩‍💼</div>
+        <div class="contact-content">
+          <div class="contact-name">Елена Волкова</div>
+          <div class="contact-meta">
+            <span>НИУ ВШЭ, выпускница</span>
+            <span>·</span>
+            <span>TypeScript, SQL</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-small btn-accept">✓ Принять</button>
+          <button class="btn-small btn-decline">✕ Отклонить</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">👨‍💼</div>
+        <div class="contact-content">
+          <div class="contact-name">Дмитрий Козлов</div>
+          <div class="contact-meta">
+            <span>Москва | Frontend</span>
+            <span>·</span>
+            <span>React, Vue</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-small btn-accept">✓ Принять</button>
+          <button class="btn-small btn-decline">✕ Отклонить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTGOING TAB -->
+    <div class="contacts-list hidden" id="outgoing-tab" style="display: none;">
+      <div class="contact-card">
+        <div class="contact-avatar">👩‍🎓</div>
+        <div class="contact-content">
+          <div class="contact-name">Ольга Морозова</div>
+          <div class="contact-meta">
+            <span>МГУ, 4 курс</span>
+            <span>·</span>
+            <span>Design, UI/UX</span>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <div style="font-size: 11px; color: #94A3B8; font-weight: 600;">Ожидание</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item">
+      <div class="nav-icon">🏠</div>
+      <span>Главная</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⭐</div>
+      <span>Избранное</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">📬</div>
+      <span>Отклики</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👤</div>
+      <span>Профиль</span>
+    </div>
+  </nav>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    const contents = {
+      'contacts': document.getElementById('contacts-tab'),
+      'incoming': document.getElementById('incoming-tab'),
+      'outgoing': document.getElementById('outgoing-tab')
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        Object.values(contents).forEach(content => {
+          content.style.display = 'none';
+        });
+        contents[tabName].style.display = 'block';
+      });
+    });
+
+    // Back button
+    document.querySelector('.header-back').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    // Nav items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

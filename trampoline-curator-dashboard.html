@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ЛК Куратора — Главная</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-warning: #F59E0B;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.dark-theme .header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .header-logo {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-family: 'Merriweather', serif;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notification-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .notification-badge:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: var(--color-urgent);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .container {
+      margin-top: 56px;
+      margin-bottom: 70px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 20px 16px;
+    }
+
+    .welcome-section {
+      margin-bottom: 32px;
+      animation: slideDown 0.6s ease 0.1s both;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-family: 'Merriweather', serif;
+    }
+
+    .welcome-subtitle {
+      font-size: 13px;
+      color: #94A3B8;
+    }
+
+    body.dark-theme .welcome-subtitle {
+      color: #CBD5E1;
+    }
+
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+      animation: fadeIn 0.6s ease 0.2s both;
+      opacity: 0;
+    }
+
+    @media (min-width: 768px) {
+      .widgets-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .widget {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .widget {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .widget:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .widget-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .widget-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-family: 'Merriweather', serif;
+    }
+
+    .widget-label {
+      font-size: 12px;
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    body.dark-theme .widget-label {
+      color: #CBD5E1;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+      animation: slideUp 0.6s ease 0.3s both;
+      opacity: 0;
+    }
+
+    @media (min-width: 768px) {
+      .action-buttons {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+    }
+
+    .btn-secondary {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      font-family: 'Merriweather', serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: slideUp 0.6s ease 0.4s both;
+      opacity: 0;
+    }
+
+    .section-icon {
+      font-size: 20px;
+    }
+
+    .moderation-list {
+      animation: slideUp 0.6s ease 0.5s both;
+      opacity: 0;
+    }
+
+    .moderation-item {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .moderation-item {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .moderation-item:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.06);
+    }
+
+    .item-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .item-title {
+      color: var(--color-text-dark);
+    }
+
+    .item-meta {
+      font-size: 11px;
+      color: #94A3B8;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    body.dark-theme .item-meta {
+      color: #CBD5E1;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .action-btn.danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-urgent);
+    }
+
+    .action-btn.danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+
+    body.dark-theme .bottom-nav {
+      background: rgba(15, 23, 42, 0.95);
+      border-top-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      color: #94A3B8;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .nav-item.active {
+      color: var(--color-primary);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--color-primary);
+      border-radius: 50%;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none;
+      }
+
+      .container {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="header-logo">
+      <span>🚀</span>
+      Трамплин
+    </a>
+    
+    <div class="header-right">
+      <button class="notification-badge">
+        🔔
+        <div class="notification-dot"></div>
+      </button>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- WELCOME SECTION -->
+    <div class="welcome-section">
+      <h1 class="welcome-title">Привет, Куратор 👋</h1>
+      <p class="welcome-subtitle">Добро пожаловать в панель управления</p>
+    </div>
+
+    <!-- WIDGETS GRID -->
+    <div class="widgets-grid">
+      <div class="widget">
+        <div class="widget-icon">📋</div>
+        <div class="widget-value">7</div>
+        <div class="widget-label">Карточек на проверке</div>
+      </div>
+      <div class="widget">
+        <div class="widget-icon">🏢</div>
+        <div class="widget-value">3</div>
+        <div class="widget-label">Компаний на верификации</div>
+      </div>
+      <div class="widget">
+        <div class="widget-icon">⚠️</div>
+        <div class="widget-value">2</div>
+        <div class="widget-label">Активных жалоб</div>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div style="margin-bottom: 24px; animation: slideUp 0.6s ease 0.3s both; opacity: 0;">
+      <p style="font-size: 12px; color: #94A3B8; margin-bottom: 12px; font-weight: 500;">Быстрые действия:</p>
+      <div class="action-buttons">
+        <button class="btn btn-primary">
+          <span>✓</span> Модерация
+        </button>
+        <button class="btn btn-secondary">
+          <span>🏢</span> Верификация
+        </button>
+        <button class="btn btn-secondary">
+          <span>⚠️</span> Жалобы
+        </button>
+      </div>
+    </div>
+
+    <!-- MODERATION SECTION -->
+    <div class="section-title">
+      <span class="section-icon">📋</span>
+      Очередь модерации
+    </div>
+
+    <div class="moderation-list">
+      <!-- Item 1 -->
+      <div class="moderation-item">
+        <div class="item-avatar">💼</div>
+        <div class="item-content">
+          <div class="item-title">Frontend Developer</div>
+          <div class="item-meta">
+            <span>Яндекс</span>
+            <span>·</span>
+            <span>Только что</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">Одобрить</button>
+          <button class="action-btn danger">Отклонить</button>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="moderation-item">
+        <div class="item-avatar">🏆</div>
+        <div class="item-content">
+          <div class="item-title">HackDay Moscow</div>
+          <div class="item-meta">
+            <span>Яндекс</span>
+            <span>·</span>
+            <span>2 часа назад</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">Одобрить</button>
+          <button class="action-btn danger">Отклонить</button>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="moderation-item">
+        <div class="item-avatar">📝</div>
+        <div class="item-content">
+          <div class="item-title">ML Engineer</div>
+          <div class="item-meta">
+            <span>Сбер</span>
+            <span>·</span>
+            <span>5 часов назад</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">Одобрить</button>
+          <button class="action-btn danger">Отклонить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERIFICATION SECTION -->
+    <div class="section-title" style="margin-top: 40px;">
+      <span class="section-icon">🏢</span>
+      Верификация компаний
+    </div>
+
+    <div class="moderation-list">
+      <!-- Company 1 -->
+      <div class="moderation-item">
+        <div class="item-avatar">🏢</div>
+        <div class="item-content">
+          <div class="item-title">MegaStartup Inc</div>
+          <div class="item-meta">
+            <span>ИНН: 7701234567</span>
+            <span>·</span>
+            <span>3 дня назад</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">✓ Верифицировать</button>
+          <button class="action-btn danger">Отклонить</button>
+        </div>
+      </div>
+
+      <!-- Company 2 -->
+      <div class="moderation-item">
+        <div class="item-avatar">💻</div>
+        <div class="item-content">
+          <div class="item-title">TechCorp Ltd</div>
+          <div class="item-meta">
+            <span>ИНН: 7701234568</span>
+            <span>·</span>
+            <span>1 день назад</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">✓ Верифицировать</button>
+          <button class="action-btn danger">Отклонить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS SECTION -->
+    <div class="section-title" style="margin-top: 40px;">
+      <span class="section-icon">⚠️</span>
+      Пул жалоб (≥3 жалобы)
+    </div>
+
+    <div class="moderation-list">
+      <!-- Report 1 -->
+      <div class="moderation-item">
+        <div class="item-avatar">⚠️</div>
+        <div class="item-content">
+          <div class="item-title">Frontend Developer (Яндекс)</div>
+          <div class="item-meta">
+            <span>3 жалобы</span>
+            <span>·</span>
+            <span>Спам/Подозрительно</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">Восстановить</button>
+          <button class="action-btn danger">Удалить</button>
+        </div>
+      </div>
+
+      <!-- Report 2 -->
+      <div class="moderation-item">
+        <div class="item-avatar">⚠️</div>
+        <div class="item-content">
+          <div class="item-title">QA Engineer (Стажировка)</div>
+          <div class="item-meta">
+            <span>4 жалобы</span>
+            <span>·</span>
+            <span>Неполная информация</span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn">Восстановить</button>
+          <button class="action-btn danger">Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">🏠</div>
+      <span>Главная</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">📋</div>
+      <span>Модерация</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">🏢</div>
+      <span>Компании</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⚙️</div>
+      <span>Настройки</span>
+    </div>
+  </nav>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Nav items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+    // Widget clicks
+    const widgets = document.querySelectorAll('.widget');
+    widgets.forEach(widget => {
+      widget.addEventListener('click', () => {
+        console.log('Widget clicked');
+      });
+    });
+  </script>
+
+</body>
+</html>

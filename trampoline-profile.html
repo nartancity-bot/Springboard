@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Иван Петров — Профиль</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-gold: #F59E0B;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-theme .header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Merriweather', serif;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .settings-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .settings-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .container {
+      margin-top: 56px;
+      margin-bottom: 70px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 16px;
+    }
+
+    .profile-header {
+      text-align: center;
+      padding: 24px 0;
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      border: 3px solid rgba(99, 102, 241, 0.2);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-family: 'Merriweather', serif;
+    }
+
+    .profile-subtitle {
+      font-size: 13px;
+      color: #94A3B8;
+      margin-bottom: 12px;
+    }
+
+    body.dark-theme .profile-subtitle {
+      color: #CBD5E1;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-accent);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+    }
+
+    .btn-secondary {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .section {
+      margin-bottom: 24px;
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+      animation: slideUp 0.6s ease;
+      animation-fill-mode: both;
+    }
+
+    body.dark-theme .section {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .section:nth-child(1) { animation-delay: 0.1s; }
+    .section:nth-child(2) { animation-delay: 0.2s; }
+    .section:nth-child(3) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--color-text-light);
+      font-family: 'Merriweather', serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    body.dark-theme .section-title {
+      color: var(--color-text-dark);
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tag:hover {
+      background: rgba(99, 102, 241, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .tag.add {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px dashed var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .tag.add:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .project-card {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .project-card {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .project-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+
+    .project-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .project-title {
+      color: var(--color-text-dark);
+    }
+
+    .project-meta {
+      font-size: 11px;
+      color: #94A3B8;
+      margin-bottom: 8px;
+    }
+
+    body.dark-theme .project-meta {
+      color: #CBD5E1;
+    }
+
+    .project-link {
+      font-size: 11px;
+      color: var(--color-primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .link-btn {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-theme .link-btn {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .link-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .link-btn.filled {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    .link-btn.filled:hover {
+      background: #4F46E5;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+
+    body.dark-theme .bottom-nav {
+      background: rgba(15, 23, 42, 0.95);
+      border-top-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      color: #94A3B8;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .nav-item.active {
+      color: var(--color-primary);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--color-primary);
+      border-radius: 50%;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    .icon-small {
+      font-size: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none;
+      }
+
+      .container {
+        margin-bottom: 0;
+        padding: 32px 0;
+      }
+
+      .action-buttons {
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-title">Мой профиль</div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <button class="settings-btn">⚙️</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+      <div class="avatar">👨‍💻</div>
+      <h1 class="profile-name">Иван Петров</h1>
+      <p class="profile-subtitle">МГУ, 4 курс • Computer Science</p>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        Активный поиск
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-primary">✏️ Редактировать</button>
+        <button class="btn btn-secondary">👁 Как видят HR</button>
+      </div>
+    </div>
+
+    <!-- SKILLS SECTION -->
+    <div class="section">
+      <div class="section-title">
+        <span class="icon-small">⚡</span>
+        Навыки
+      </div>
+      <div class="tags">
+        <span class="tag">React</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">REST API</span>
+        <span class="tag">Git</span>
+        <span class="tag">Docker</span>
+        <span class="tag">+ Добавить</span>
+      </div>
+    </div>
+
+    <!-- PROJECTS SECTION -->
+    <div class="section">
+      <div class="section-title">
+        <span class="icon-small">📁</span>
+        Проекты
+      </div>
+      
+      <div class="project-card">
+        <div class="project-title">Интернет-магазин</div>
+        <div class="project-meta">React, Node.js, PostgreSQL • 2024</div>
+        <a href="#" class="project-link">
+          <span>🔗</span> github.com/ivan/shop
+        </a>
+      </div>
+
+      <div class="project-card">
+        <div class="project-title">Social Media App</div>
+        <div class="project-meta">React Native, Firebase • 2023</div>
+        <a href="#" class="project-link">
+          <span>🔗</span> github.com/ivan/social
+        </a>
+      </div>
+
+      <div class="project-card">
+        <div class="project-title">Chat Application</div>
+        <div class="project-meta">Socket.io, Express, React • 2023</div>
+        <a href="#" class="project-link">
+          <span>🔗</span> github.com/ivan/chat
+        </a>
+      </div>
+
+      <button style="width: 100%; padding: 10px; border: 1px dashed var(--color-primary); border-radius: 8px; background: transparent; color: var(--color-primary); font-weight: 600; font-size: 12px; cursor: pointer; margin-top: 12px;">+ Добавить проект</button>
+    </div>
+
+    <!-- LINKS SECTION -->
+    <div class="section">
+      <div class="section-title">
+        <span class="icon-small">🔗</span>
+        Контакты и ссылки
+      </div>
+      <div class="links-grid">
+        <a href="#" class="link-btn filled">
+          <span>🐙</span> GitHub
+        </a>
+        <a href="#" class="link-btn">
+          <span>🌐</span> Сайт
+        </a>
+        <a href="#" class="link-btn">
+          <span>💼</span> LinkedIn
+        </a>
+        <a href="#" class="link-btn">
+          <span>✈️</span> Telegram
+        </a>
+      </div>
+    </div>
+
+    <!-- PREVIEW SECTION -->
+    <div class="section">
+      <div class="section-title">
+        <span class="icon-small">👀</span>
+        Как меня видит работодатель
+      </div>
+      <p style="font-size: 12px; color: #94A3B8; line-height: 1.6; margin-bottom: 12px;">
+        Работодатели видят твой профиль, навыки, опыт проектов и ссылки. 
+        Они могут рекомендовать тебя на вакансии или добавить в контакты.
+      </p>
+      <button style="width: 100%; padding: 10px; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px; background: rgba(99, 102, 241, 0.05); color: var(--color-primary); font-weight: 600; font-size: 12px; cursor: pointer;">👁 Посмотреть превью</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item" data-page="home">
+      <div class="nav-icon">🏠</div>
+      <span>Главная</span>
+    </div>
+    <div class="nav-item" data-page="favorites">
+      <div class="nav-icon">⭐</div>
+      <span>Избранное</span>
+    </div>
+    <div class="nav-item" data-page="responses">
+      <div class="nav-icon">📬</div>
+      <span>Отклики</span>
+    </div>
+    <div class="nav-item active" data-page="profile">
+      <div class="nav-icon">👤</div>
+      <span>Профиль</span>
+    </div>
+  </nav>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Nav items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+    // Smooth scroll on mobile
+    document.addEventListener('touchmove', (e) => {
+      if (e.target.closest('.container')) {
+        return;
+      }
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

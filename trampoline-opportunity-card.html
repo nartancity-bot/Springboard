@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Developer — Яндекс</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      --color-primary: #6366F1;
+      --color-accent: #10B981;
+      --color-urgent: #EF4444;
+      --color-gold: #F59E0B;
+      --color-bg-light: #F8FAFC;
+      --color-bg-dark: #0F172A;
+      --color-text-light: #1E293B;
+      --color-text-dark: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Merriweather', serif;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-theme .header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .header-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .header-back:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .container {
+      margin-top: 56px;
+      margin-bottom: 70px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .media-cover {
+      width: 100%;
+      height: 280px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+      font-size: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-cover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .verified-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(16, 185, 129, 0.9);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-header-info {
+      padding: 20px 16px;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+    }
+
+    body.dark-theme .card-header-info {
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .header-left {
+      flex: 1;
+    }
+
+    .company-name {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    body.dark-theme .company-name {
+      color: #CBD5E1;
+    }
+
+    .job-title {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Merriweather', serif;
+      margin-bottom: 12px;
+      color: var(--color-text-light);
+    }
+
+    body.dark-theme .job-title {
+      color: var(--color-text-dark);
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #64748B;
+      margin-bottom: 8px;
+    }
+
+    body.dark-theme .meta-row {
+      color: #94A3B8;
+    }
+
+    .meta-separator {
+      color: #CBD5E1;
+    }
+
+    .favorite-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.1);
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .favorite-btn:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    .favorite-btn.active {
+      background: var(--color-gold);
+      color: white;
+    }
+
+    .deadline {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-urgent);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding: 0 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(203, 213, 225, 0.3);
+    }
+
+    body.dark-theme .tags {
+      border-top-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .tag {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .tag:hover {
+      background: rgba(99, 102, 241, 0.2);
+      cursor: pointer;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    body.dark-theme .tabs {
+      border-bottom-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .tab {
+      padding: 14px 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #94A3B8;
+      position: relative;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--color-primary);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--color-primary);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--color-text-light);
+      font-family: 'Merriweather', serif;
+    }
+
+    body.dark-theme .section-title {
+      color: var(--color-text-dark);
+    }
+
+    .section-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #64748B;
+      margin-bottom: 16px;
+    }
+
+    body.dark-theme .section-text {
+      color: #CBD5E1;
+    }
+
+    .requirement-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .requirement-list li {
+      padding: 8px 0;
+      font-size: 13px;
+      color: #64748B;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    body.dark-theme .requirement-list li {
+      color: #CBD5E1;
+    }
+
+    .requirement-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-weight: 700;
+    }
+
+    .company-info {
+      background: rgba(99, 102, 241, 0.05);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    body.dark-theme .company-info {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .company-desc {
+      font-size: 13px;
+      color: #64748B;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    body.dark-theme .company-desc {
+      color: #CBD5E1;
+    }
+
+    .company-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      padding: 6px 12px;
+      background: rgba(99, 102, 241, 0.2);
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--color-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .link-btn:hover {
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    .mini-map {
+      width: 100%;
+      height: 240px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      border: 1px solid rgba(203, 213, 225, 0.3);
+      flex-direction: column;
+      gap: 8px;
+      color: #94A3B8;
+    }
+
+    body.dark-theme .mini-map {
+      border-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .location-text {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .cta-section {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(203, 213, 225, 0.3);
+      padding: 12px 16px;
+      display: flex;
+      gap: 12px;
+      z-index: 30;
+    }
+
+    body.dark-theme .cta-section {
+      background: rgba(15, 23, 42, 0.95);
+      border-top-color: rgba(71, 85, 105, 0.3);
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+    }
+
+    .status-label {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        margin-bottom: 0;
+      }
+
+      .media-cover {
+        height: 380px;
+        border-radius: 16px;
+        margin: 20px;
+      }
+
+      .card-header-info {
+        margin: 0 20px;
+        border-bottom: none;
+        padding: 20px 0;
+      }
+
+      .tags {
+        padding: 0;
+        border-top: none;
+        margin: 0 20px 20px 20px;
+      }
+
+      .tabs {
+        border-bottom: none;
+        padding: 0;
+        margin: 0 20px;
+      }
+
+      .tab-content {
+        padding: 20px 0;
+        margin: 0 20px;
+      }
+
+      .cta-section {
+        position: static;
+        background: transparent;
+        border-top: none;
+        padding: 32px 20px;
+        gap: 16px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .btn {
+        max-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <button class="header-back">← Назад</button>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- MEDIA COVER -->
+    <div class="media-cover">
+      <span>💼</span>
+      <div class="badge">⚡ Срочная</div>
+      <div class="verified-badge">✓ Верифицирована</div>
+    </div>
+
+    <!-- CARD HEADER INFO -->
+    <div class="card-header-info">
+      <div class="header-left">
+        <div class="company-name">Яндекс</div>
+        <h1 class="job-title">Frontend Developer</h1>
+        <div class="meta-row">
+          <span>💰 120–180k</span>
+          <span class="meta-separator">·</span>
+          <span>Гибрид</span>
+          <span class="meta-separator">·</span>
+          <span>Москва</span>
+        </div>
+        <div class="deadline">
+          ⏰ Дедлайн: 5 апреля 2026
+        </div>
+      </div>
+      <button class="favorite-btn" id="favoriteBtn">★</button>
+    </div>
+
+    <!-- TAGS -->
+    <div class="tags">
+      <span class="tag">React</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">REST API</span>
+      <span class="tag">JavaScript</span>
+      <span class="tag">Junior+</span>
+      <span class="tag">Полная занятость</span>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="description">Описание</button>
+      <button class="tab" data-tab="requirements">Требования</button>
+      <button class="tab" data-tab="company">Компания</button>
+      <button class="tab" data-tab="location">Место</button>
+    </div>
+
+    <!-- DESCRIPTION TAB -->
+    <div class="tab-content active" id="description">
+      <div class="section-title">О должности</div>
+      <p class="section-text">
+        Ищем опытного Frontend Developer для работы над key features нашего продукта. 
+        Вы будете работать с современным стеком (React, TypeScript) в команде опытных разработчиков.
+      </p>
+
+      <div class="section-title">Что делать</div>
+      <ul class="requirement-list">
+        <li>Разрабатывать UI компоненты в React</li>
+        <li>Оптимизировать производительность приложения</li>
+        <li>Работать с REST API и WebSocket</li>
+        <li>Писать юнит-тесты и integration tests</li>
+        <li>Участвовать в code review процессе</li>
+        <li>Взаимодействовать с дизайнерами и бэкенд разработчиками</li>
+      </ul>
+
+      <div class="section-title" style="margin-top: 20px;">Условия</div>
+      <p class="section-text">
+        • Гибридный формат работы (офис в Москве, возможность удалённой работы 2 дня в неделю)<br>
+        • ДМС для сотрудника и близких<br>
+        • Бесплатный обед в офисе<br>
+        • Программа обучения и развития<br>
+        • Пятидневная рабочая неделя
+      </p>
+    </div>
+
+    <!-- REQUIREMENTS TAB -->
+    <div class="tab-content" id="requirements">
+      <div class="section-title">Обязательное</div>
+      <ul class="requirement-list">
+        <li>2+ года опыта разработки на React</li>
+        <li>Хорошее знание JavaScript / TypeScript</li>
+        <li>Опыт работы с REST API</li>
+        <li>Знание основ HTML/CSS</li>
+        <li>Опыт в Git и командной разработке</li>
+      </ul>
+
+      <div class="section-title" style="margin-top: 20px;">Приветствуется</div>
+      <ul class="requirement-list">
+        <li>Опыт с Next.js или другими метафреймворками</li>
+        <li>Знание GraphQL</li>
+        <li>Опыт работы с Cypress или Playwright</li>
+        <li>Понимание веб-доступности (A11y)</li>
+        <li>Опыт работы с Redux или MobX</li>
+        <li>Портфолио или GitHub projects</li>
+      </ul>
+
+      <div class="section-title" style="margin-top: 20px;">Уровень</div>
+      <p class="section-text">Junior+ / Middle</p>
+    </div>
+
+    <!-- COMPANY TAB -->
+    <div class="tab-content" id="company">
+      <div class="company-info">
+        <div class="section-title">О компании</div>
+        <p class="company-desc">
+          Яндекс — один из крупнейших IT-компаний в России. Мы разрабатываем поиск, карты, 
+          такси, маркетплейс и другие сервисы, которыми пользуются миллионы людей. 
+          Наша команда Frontend разработчиков состоит из 200+ специалистов.
+        </p>
+        <div class="company-links">
+          <button class="link-btn">🌐 Сайт</button>
+          <button class="link-btn">💼 HH.ru</button>
+          <button class="link-btn">🔗 LinkedIn</button>
+        </div>
+      </div>
+
+      <div class="section-title">Технологический стек компании</div>
+      <div class="tags" style="margin: 0; padding: 0;">
+        <span class="tag">React</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">Kubernetes</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+
+    <!-- LOCATION TAB -->
+    <div class="tab-content" id="location">
+      <div class="section-title">Место работы</div>
+      <div class="mini-map">
+        <div style="font-size: 32px;">📍</div>
+        <div class="location-text">Москва, ул. Льва Толстого, 16</div>
+        <div style="font-size: 11px; color: #94A3B8;">м. Кропоткинская</div>
+      </div>
+      
+      <div class="section-title">Формат</div>
+      <p class="section-text">
+        Гибрид • 2 дня в неделю в офисе (вторник и среда)<br>
+        Остальные дни можно работать из дома
+      </p>
+
+      <div class="section-title">Как добраться</div>
+      <p class="section-text">
+        Офис расположен в 5 минутах ходьбы от метро Кропоткинская. 
+        Есть парковка для машин сотрудников и шикарная столовая на 2-м этаже.
+      </p>
+    </div>
+  </div>
+
+  <!-- CTA SECTION -->
+  <div class="cta-section">
+    <button class="btn btn-secondary" id="favoriteBtn2">★ В избранное</button>
+    <button class="btn btn-primary">Откликнуться →</button>
+  </div>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.textContent = '☀️';
+    }
+
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabName = button.dataset.tab;
+        
+        // Remove active from all
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active to clicked
+        button.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // Favorite toggle
+    const favBtns = [document.getElementById('favoriteBtn'), document.getElementById('favoriteBtn2')];
+    
+    favBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        btn.classList.toggle('active');
+        favBtns.forEach(b => b.classList = btn.classList);
+      });
+    });
+
+    // Back button
+    document.querySelector('.header-back').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    // Mobile scroll adjustment
+    const container = document.querySelector('.container');
+    const cta = document.querySelector('.cta-section');
+    
+    if (window.innerWidth < 768) {
+      container.addEventListener('scroll', () => {
+        // Smooth scrolling
+      });
+    }
+  </script>
+
+</body>
+</html>
